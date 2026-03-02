@@ -199,7 +199,7 @@ function generatePDF(data) {
 
   const rows = top180.map((c, i) => {
     const criterioTags = c.criterios.map(cr =>
-      `<span style="display:inline-block;background:#D6E4F0;color:#1A3A5C;border-radius:3px;padding:1px 5px;font-size:7px;margin:1px;white-space:nowrap;">${cr.label} (+${cr.pts})</span>`
+      `<span style="display:inline-block;background:#D6E4F0;color:#1A3A5C;border-radius:4px;padding:1px 6px;font-size:8px;margin:1px;">${cr.label} (+${cr.pts})</span>`
     ).join(" ");
     const shade = i % 2 === 0 ? "#F8FAFC" : "#FFFFFF";
     const alertaResi = c.tempo.includes("4 anos") ? "<span style=\"color:#92400E;font-weight:700\">⚠</span>" : "";
@@ -224,17 +224,22 @@ function generatePDF(data) {
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+3:wght@300;400;600;700&display=swap');
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Source Sans 3', Arial, sans-serif; font-size: 10px; color: #1C2B3A; }
-  .header { display:flex; align-items:center; gap:16px; padding: 16px 24px; background: #1A3A5C; color:#fff; }
-  .header img { height: 70px; filter: brightness(0) invert(1); }
-  .header-text h1 { font-family: 'Playfair Display', serif; font-size: 18px; margin-bottom: 2px; }
-  .header-text p { font-size: 10px; opacity:.8; }
+  .header { display:flex; align-items:center; gap:20px; padding: 0 32px; height:72px; background: #1A3A5C; color:#fff; box-shadow:0 4px 20px rgba(0,0,0,.25); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .header img { height: 52px; filter: brightness(0) invert(1); flex-shrink: 0; }
+  .header-text h1 { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 2px; }
+  .header-text p { font-size: 11px; opacity:.75; }
   .section { padding: 12px 24px; }
   .section-title { font-family: 'Playfair Display', serif; font-size: 14px; color: #1A3A5C; border-bottom: 2px solid #1A3A5C; padding-bottom: 4px; margin-bottom: 10px; }
   table { width:100%; border-collapse:collapse; }
-  th { background:#1A3A5C; color:#fff; padding:5px 6px; text-align:left; font-size:9px; font-weight:600; }
+  th { background:#1A3A5C; color:#fff; padding:5px 6px; text-align:left; font-size:9px; font-weight:600; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   td { border-bottom: 1px solid #E2E8F0; vertical-align: top; }
   .footer { padding: 10px 24px; text-align:center; font-size:8px; color:#64748B; border-top:1px solid #CBD5E1; margin-top:16px; }
-  @page { size: A4 landscape; margin: 10mm; } @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+  @media print {
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .header { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; background: #1A3A5C !important; }
+    .header img { filter: brightness(0) invert(1) !important; }
+    th { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; background: #1A3A5C !important; }
+  }
 </style></head><body>
 <div class="header">
   <img src="${BRASAO}" alt="Brasão" />
@@ -247,17 +252,17 @@ function generatePDF(data) {
 </div>
 
 <div class="section">
-  <div class="section-title">RELATÓRIO DE CLASSIFICAÇÃO HABITACIONAL — DECRETO MUNICIPAL N° 3.271/2026</div>
+  <div class="section-title">RELATÓRIO DE CLASSIFICAÇÃO HABITACIONAL — DECRETO MUNICIPAL N° ____/2026</div>
   <p style="margin-bottom:10px;font-size:9px;color:#64748B">Classificação realizada com base nos critérios de hierarquização do Art. 5° do Decreto Municipal, conforme Portaria MCID n° 738/2024. Ordenação: maior para menor pontuação.</p>
   <table>
     <thead><tr>
-      <th style="width:25px">Pos.</th>
-      <th style="width:120px">Nome Completo</th>
-      <th style="width:65px">Protocolo</th>
-      <th style="width:45px">CadÚnico</th>
-      <th style="width:55px">Residência</th>
-      <th style="width:80px">Renda Familiar</th>
-      <th style="width:28px;text-align:center">Pts</th>
+      <th style="width:30px">Pos.</th>
+      <th style="width:160px">Nome Completo</th>
+      <th style="width:80px">Protocolo</th>
+      <th style="width:55px">CadÚnico</th>
+      <th style="width:70px">Residência</th>
+      <th style="width:100px">Renda Familiar</th>
+      <th style="width:35px;text-align:center">Pts</th>
       <th>Critérios Atendidos</th>
     </tr></thead>
     <tbody>${rows}</tbody>
@@ -274,7 +279,7 @@ ${excluded.length > 0 ? `
 </div>` : ""}
 
 <div class="footer">
-  Base legal: Decreto Municipal n° 3.271/2026 &nbsp;|&nbsp; Portaria MCID n° 738/2024 &nbsp;|&nbsp; Lei n° 14.620/2023 &nbsp;|&nbsp; LGPD (Lei n° 13.709/2018)<br/>
+  Base legal: Decreto Municipal n° ____/2026 &nbsp;|&nbsp; Portaria MCID n° 738/2024 &nbsp;|&nbsp; Lei n° 14.620/2023 &nbsp;|&nbsp; LGPD (Lei n° 13.709/2018)<br/>
   Este documento é de uso interno e deve ser tratado com sigilo, em conformidade com a LGPD.
 </div>
 </body></html>`;
@@ -355,13 +360,13 @@ export default function App() {
     <div style={{ minHeight:"100vh", background: C.bg, fontFamily:"'Source Sans 3',sans-serif" }}>
       {/* HEADER */}
       <div style={{ background: C.azul, color:"#fff", padding:"0 32px", display:"flex", alignItems:"center", gap:20, height:72, boxShadow:"0 4px 20px rgba(0,0,0,.25)" }}>
-        <img src={BRASAO} alt="Brasão Boituva" style={{ height:60, flexShrink:0, mixBlendMode:"screen" }} />
+        <img src={BRASAO} alt="Brasão Boituva" style={{ height:52, filter:"brightness(0) invert(1)", flexShrink:0 }} />
         <div>
           <div style={{ fontFamily:"'Playfair Display',serif", fontSize:18, fontWeight:700, letterSpacing:-.3 }}>
             Prefeitura Municipal de Boituva
           </div>
           <div style={{ fontSize:11, opacity:.75, marginTop:1 }}>
-            Sistema de Classificação Habitacional — MCMV / FAR &nbsp;|&nbsp; Decreto n° 3.271/2026
+            Sistema de Classificação Habitacional — MCMV / FAR &nbsp;|&nbsp; Decreto n° ____/2026
           </div>
         </div>
         <div style={{ marginLeft:"auto", fontSize:11, opacity:.6, textAlign:"right" }}>
