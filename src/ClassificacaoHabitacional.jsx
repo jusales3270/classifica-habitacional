@@ -225,7 +225,7 @@ function generatePDF(data) {
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Source Sans 3', Arial, sans-serif; font-size: 10px; color: #1C2B3A; }
   .header { display:flex; align-items:center; gap:20px; padding: 0 32px; height:72px; background: #1A3A5C; color:#fff; box-shadow:0 4px 20px rgba(0,0,0,.25); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .header img { height: 52px; filter: brightness(0) invert(1); flex-shrink: 0; }
+  .header img { height: 52px; flex-shrink: 0; }
   .header-text h1 { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 2px; }
   .header-text p { font-size: 11px; opacity:.75; }
   .section { padding: 12px 24px; }
@@ -238,7 +238,7 @@ function generatePDF(data) {
   @media print {
     body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .header { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; background: #1A3A5C !important; }
-    .header img { filter: brightness(0) invert(1) !important; }
+
     th { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; background: #1A3A5C !important; }
   }
 </style></head><body>
