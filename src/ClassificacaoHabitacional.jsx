@@ -247,7 +247,7 @@ function generatePDF(data) {
 </div>
 
 <div class="section">
-  <div class="section-title">RELATÓRIO DE CLASSIFICAÇÃO HABITACIONAL — DECRETO MUNICIPAL N° ____/2026</div>
+  <div class="section-title">RELATÓRIO DE CLASSIFICAÇÃO HABITACIONAL — DECRETO MUNICIPAL N° 3.271/2026</div>
   <p style="margin-bottom:10px;font-size:9px;color:#64748B">Classificação realizada com base nos critérios de hierarquização do Art. 5° do Decreto Municipal, conforme Portaria MCID n° 738/2024. Ordenação: maior para menor pontuação.</p>
   <table>
     <thead><tr>
@@ -274,7 +274,7 @@ ${excluded.length > 0 ? `
 </div>` : ""}
 
 <div class="footer">
-  Base legal: Decreto Municipal n° ____/2026 &nbsp;|&nbsp; Portaria MCID n° 738/2024 &nbsp;|&nbsp; Lei n° 14.620/2023 &nbsp;|&nbsp; LGPD (Lei n° 13.709/2018)<br/>
+  Base legal: Decreto Municipal n° 3.271/2026 &nbsp;|&nbsp; Portaria MCID n° 738/2024 &nbsp;|&nbsp; Lei n° 14.620/2023 &nbsp;|&nbsp; LGPD (Lei n° 13.709/2018)<br/>
   Este documento é de uso interno e deve ser tratado com sigilo, em conformidade com a LGPD.
 </div>
 </body></html>`;
@@ -361,7 +361,7 @@ export default function App() {
             Prefeitura Municipal de Boituva
           </div>
           <div style={{ fontSize:11, opacity:.75, marginTop:1 }}>
-            Sistema de Classificação Habitacional — MCMV / FAR &nbsp;|&nbsp; Decreto n° ____/2026
+            Sistema de Classificação Habitacional — MCMV / FAR &nbsp;|&nbsp; Decreto n° 3.271/2026
           </div>
         </div>
         <div style={{ marginLeft:"auto", fontSize:11, opacity:.6, textAlign:"right" }}>
