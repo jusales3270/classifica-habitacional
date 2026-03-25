@@ -29,7 +29,7 @@ function scoreCriterios(texto) {
     return SCORING_RULES.filter(r => r.keywords.some(k => t.includes(k)));
 }
 function checkEligibility(row) {
-    const obs = (row["Conteúdo"] || "").toLowerCase();
+    const obs = (row["Conteúdo"] || row["assunto.preencha_o_1hwv1v1h"] || "").toLowerCase();
     if (obs.includes("teste") || obs.includes("não se aplica")) return { ok: false, reason: "Cadastro de TESTE" };
     const renda = (row["assunto.renda_fami_1h7e2u1h"] || "").toLowerCase();
     if (renda.includes("acima de 5") || renda.includes("4 a 5") || renda.includes("3 a 4")) return { ok: false, reason: "Renda acima da Faixa I (> R$ 2.850)" };
@@ -40,13 +40,15 @@ function checkEligibility(row) {
 function parseCSV(text) {
     const lines = text.split("\n").filter(l => l.trim());
     if (lines.length < 2) return [];
-    const headers = lines[0].split(";").map(h => h.replace(/^"|"$/g, "").trim());
+    // Auto-detectar delimitador: se o header contém ";" usa ";", senão usa ","
+    const delim = lines[0].includes(";") ? ";" : ",";
+    const headers = lines[0].split(delim).map(h => h.replace(/^"|"$/g, "").trim());
     const rows = [];
     for (let i = 1; i < lines.length; i++) {
         const vals = []; let cur = "", inQ = false;
         for (const ch of lines[i]) {
             if (ch === '"') { inQ = !inQ; }
-            else if (ch === ";" && !inQ) { vals.push(cur.trim()); cur = ""; }
+            else if (ch === delim && !inQ) { vals.push(cur.trim()); cur = ""; }
             else cur += ch;
         }
         vals.push(cur.trim());
@@ -59,10 +61,11 @@ function parseCSV(text) {
 }
 function processRows(rows) {
     const classified = [], excluded = [];
-    for (const row of rows) {
+    for (let idx = 0; idx < rows.length; idx++) {
+        const row = rows[idx];
         const { ok, reason } = checkEligibility(row);
         const nome = row["assunto.nome_compl_1hhomv1h"] || row["Nome"] || "—";
-        const numero = row["Número"] || "—";
+        const numero = row["Número"] || `#${idx + 1}`;
         if (!ok) { excluded.push({ numero, nome, reason }); continue; }
         const criterios = scoreCriterios(row["assunto.preencha_o_1hwv1v1h"] || "");
         const total = criterios.reduce((s, c) => s + c.pts, 0);
