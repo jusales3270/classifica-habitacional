@@ -122,7 +122,7 @@ const HBar = ({ title, data, maxVisible = 8 }) => {
 const LineChart = ({ title, data }) => { if (!data.length) return null; const max = Math.max(...data.map(d => d.value), 1); const W = 400, H = 160, pad = { t: 10, r: 10, b: 30, l: 30 }; const cW = W - pad.l - pad.r, cH = H - pad.t - pad.b; const pts = data.map((d, i) => ({ x: pad.l + (i / Math.max(data.length - 1, 1)) * cW, y: pad.t + (1 - d.value / max) * cH, ...d })); const path = pts.map((p, i) => `${i === 0 ? "M" : "L"}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" "); const area = `${path} L${pts[pts.length - 1].x},${pad.t + cH} L${pts[0].x},${pad.t + cH} Z`; return (<div style={{ background: C.card, borderRadius: 12, padding: "20px 24px", boxShadow: "0 1px 8px rgba(0,0,0,.07)" }}><div style={{ fontFamily: "'Playfair Display',serif", fontSize: 15, fontWeight: 700, color: C.azul, marginBottom: 12 }}>{title}</div><svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", height: "auto" }}><defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={C.azulM} stopOpacity="0.3" /><stop offset="100%" stopColor={C.azulM} stopOpacity="0.02" /></linearGradient></defs><path d={area} fill="url(#lg)" /><path d={path} fill="none" stroke={C.azulM} strokeWidth="2.5" strokeLinejoin="round" />{pts.map((p, i) => (<g key={i}><circle cx={p.x} cy={p.y} r={4} fill={C.azulM} stroke="#fff" strokeWidth={1.5} />{i % Math.ceil(pts.length / 8) === 0 && <text x={p.x} y={H - 6} textAnchor="middle" fontSize={8} fill={C.muted}>{p.label}</text>}</g>))}{[0, .5, 1].map((f, i) => <text key={i} x={pad.l - 4} y={pad.t + (1 - f) * cH + 4} textAnchor="end" fontSize={8} fill={C.muted}>{Math.round(max * f)}</text>)}</svg></div>); };
 
 async function generatePDF({ classified, excluded, filename }) {
-    const top180 = classified.slice(0, 180);
+    const top500 = classified.slice(0, 500);
     const now = new Date().toLocaleString("pt-BR");
     
     // Carregar imagem do brasão e converter para base64
@@ -139,7 +139,7 @@ async function generatePDF({ classified, excluded, filename }) {
         console.error("Erro ao carregar brasão:", e);
     }
     
-    const dataRows = top180.map((c, i) => {
+    const dataRows = top500.map((c, i) => {
         const tags = c.criterios.map(cr => `<span style="display:inline-block;background:#D6E4F0;color:#1A3A5C;border-radius:4px;padding:1px 6px;font-size:8px;margin:1px;">${cr.label} (+${cr.pts})</span>`).join(" ");
         const shade = i % 2 === 0 ? "#F8FAFC" : "#FFFFFF";
         const al = c.tempo.includes("4 anos") ? ` <span style="color:#92400E;font-weight:700">⚠</span>` : "";
@@ -237,9 +237,9 @@ export default function App() {
     const onDrop = useCallback((e) => { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f?.name.endsWith(".csv")) handleFile(f); }, [handleFile]);
 
     const filtered = classified.filter(c => !search || c.nome.toLowerCase().includes(search.toLowerCase()) || c.numero.includes(search));
-    const top180 = filtered.slice(0, 180);
-    const paginated = top180.slice((page - 1) * PER_PAGE, page * PER_PAGE);
-    const totalPages = Math.ceil(top180.length / PER_PAGE);
+    const top500 = filtered.slice(0, 500);
+    const paginated = top500.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+    const totalPages = Math.ceil(top500.length / PER_PAGE);
 
     const rendaCount = {};
     classified.forEach(c => { let k = c.renda.replace(/["[\]]/g, "").trim(); if (k.includes("2.850") || k.includes("2 sal")) k = "Até R$ 2.850 (Faixa I)"; else if (!k || k === "Não informada") k = "Não informada"; else k = k.substring(0, 32); rendaCount[k] = (rendaCount[k] || 0) + 1; });
@@ -324,7 +324,7 @@ export default function App() {
                     <div style={{ background: C.card, borderRadius: 12, boxShadow: "0 1px 12px rgba(0,0,0,.08)", overflow: "hidden" }}>
                         <div style={{ background: C.azul, padding: "16px 24px", display: "flex", alignItems: "center", gap: 16 }}>
                             <div>
-                                <div style={{ fontFamily: "'Playfair Display',serif", fontSize: 17, color: "#fff", fontWeight: 700 }}>🏅 Top {Math.min(180, classified.length)} Classificados</div>
+                                <div style={{ fontFamily: "'Playfair Display',serif", fontSize: 17, color: "#fff", fontWeight: 700 }}>🏅 Top {Math.min(500, classified.length)} Classificados</div>
                                 <div style={{ fontSize: 11, color: "rgba(255,255,255,.65)", marginTop: 2 }}>Lei nº 3.271/2026 — maior pontuação primeiro</div>
                             </div>
                             <div style={{ marginLeft: "auto", display: "flex", gap: 10, alignItems: "center" }}>
@@ -361,7 +361,7 @@ export default function App() {
                         })}
 
                         <div style={{ padding: "12px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid " + C.border }}>
-                            <div style={{ fontSize: 12, color: C.muted }}>Exibindo {Math.min((page - 1) * PER_PAGE + 1, top180.length)}–{Math.min(page * PER_PAGE, top180.length)} de {top180.length} candidatos</div>
+                            <div style={{ fontSize: 12, color: C.muted }}>Exibindo {Math.min((page - 1) * PER_PAGE + 1, top500.length)}–{Math.min(page * PER_PAGE, top500.length)} de {top500.length} candidatos</div>
                             <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                                 {[...Array(Math.min(totalPages, 20))].map((_, i) => (
                                     <button key={i} onClick={() => setPage(i + 1)} style={{ width: 30, height: 30, borderRadius: 6, border: "1px solid " + C.border, background: page === i + 1 ? C.azul : "transparent", color: page === i + 1 ? "#fff" : C.text, fontSize: 12, fontWeight: 600, cursor: "pointer" }}>{i + 1}</button>
